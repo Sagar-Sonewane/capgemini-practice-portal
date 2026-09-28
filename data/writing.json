@@ -1,0 +1,68 @@
+[
+  {
+    "id": "w001",
+    "audio": "/audio/writing/w001.mp3",
+    "questions": [
+      {
+        "q": "What is the primary factor driving modern organizational restructuring according to the lecture?",
+        "type": "mcq",
+        "options": [
+          "Technological disruption and market agility",
+          "Traditional hierarchical compliance",
+          "Real estate consolidation",
+          "Government regulations alone"
+        ],
+        "answer": "Technological disruption and market agility"
+      },
+      {
+        "q": "State the key metric mentioned for evaluating cross-functional performance.",
+        "type": "text",
+        "answer": "delivery speed"
+      }
+    ]
+  },
+  {
+    "id": "w002",
+    "audio": "/audio/writing/w002.mp3",
+    "questions": [
+      {
+        "q": "Which energy source experienced the largest cost reduction over the last decade?",
+        "type": "mcq",
+        "options": [
+          "Solar photovoltaic power",
+          "Nuclear fission reactors",
+          "Coal-powered thermal stations",
+          "Diesel generator systems"
+        ],
+        "answer": "Solar photovoltaic power"
+      },
+      {
+        "q": "What engineering challenge must still be addressed for widespread grid adoption?",
+        "type": "text",
+        "answer": "grid-scale energy storage"
+      }
+    ]
+  },
+  {
+    "id": "w003",
+    "audio": "/audio/writing/w003.mp3",
+    "questions": [
+      {
+        "q": "Why is microservices architecture favored over monolithic architectures in large systems?",
+        "type": "mcq",
+        "options": [
+          "Independent service deployment and modular scalability",
+          "Simpler debugging across single machines",
+          "Zero requirement for network communication",
+          "Lower initial hardware requirements"
+        ],
+        "answer": "Independent service deployment and modular scalability"
+      },
+      {
+        "q": "Identify the primary operational overhead introduced by distributed microservices.",
+        "type": "text",
+        "answer": "network latency and orchestration complexity"
+      }
+    ]
+  }
+]
