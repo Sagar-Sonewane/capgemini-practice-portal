@@ -55,13 +55,15 @@ In /types/index.ts, define TypeScript types for:
 - AttemptResult: { module: ModuleType, totalScore: number, maxScore: number, 
   percentage: number, scoreBand: string, timeTakenSec: number, items: ScoreResult[] }
 
-Then create placeholder /data/reading.json, /data/listening.json, /data/writing.json 
-with 3 sample entries each (I will replace these with the real ~50-item sets later), 
-matching the types above.
+Then create /data/reading.json using the real dataset at docs/reading.json (65 sentences 
+— use it directly, do not regenerate or truncate it). For /data/listening.json and 
+/data/writing.json, since those datasets aren't ready yet, create placeholders with 3 
+sample entries each matching the types above (I will replace these once T&P content is 
+transcribed).
 
 Update STATUS.md: mark row 2 ("Types & data schema") Done, update "Last updated" and 
-"Current phase", and note in that row that placeholder data (not the real ~50-item sets) 
-is in place.
+"Current phase", and note in that row that Reading uses the real 65-item dataset while 
+Listening/Writing are still 3-item placeholders.
 ```
 
 ---

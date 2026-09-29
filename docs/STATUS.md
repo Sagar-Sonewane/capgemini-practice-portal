@@ -2,8 +2,8 @@
 
 This file is the single source of truth for build progress. Antigravity updates it after completing each prompt in `build-prompts.md` — do not let it drift out of sync with what's actually been built.
 
-**Last updated:** 2026-09-28  
-**Current phase:** Phase 1 complete — see Post-build checklist
+**Last updated:** 2026-09-29  
+**Current phase:** Phase 1 code complete — real Reading dataset ready, Listening/Writing datasets still needed (see Post-build checklist)
 
 ---
 
@@ -49,7 +49,9 @@ _(Anything a prompt couldn't resolve on its own — e.g. the open Reading-timer 
 ## Post-build checklist (once all 11 prompts are done)
 
 - [x] Manually verify `/api/round` response never includes Listening transcripts or Writing answers (the core integrity guarantee — check this yourself, don't just trust it)
-- [ ] Replace placeholder JSON (3 sample items) with the real ~50-item datasets per module
+- [ ] **Swap Reading placeholder → real dataset**: `docs/reading.json` (65 sentences: 50 from T&P + 15 added to match style/difficulty, see `docs/reading-sentences-analysis.md`) exists and is ready — replace `/data/reading.json`'s 3-item placeholder with it, then confirm the app still builds/runs against the full set
+- [ ] Listening dataset — still placeholder (3 items); needs real audio clips + transcripts from T&P
+- [ ] Writing dataset — still placeholder (3 items); needs real paragraphs + question sets from T&P
 - [ ] Test Web Speech API behavior across the browsers your friends actually use
 - [x] Confirm timer/progress bar blink + red-state animations look right, not janky
 - [ ] Deploy to Vercel, share link, do one full end-to-end run yourself before sending to classmates

@@ -2,8 +2,8 @@
 
 This file is the single source of truth for build progress. Antigravity updates it after completing each prompt in `build-prompts.md` — do not let it drift out of sync with what's actually been built.
 
-**Last updated:** 2026-09-28  
-**Current phase:** Phase 1 complete — see Post-build checklist
+**Last updated:** 2026-09-29  
+**Current phase:** Phase 1 code complete — real Reading dataset ready (65 sentences), Listening/Writing datasets still needed (see Post-build checklist)
 
 ---
 
@@ -22,7 +22,7 @@ After finishing a prompt:
 | # | Prompt | Status | Notes |
 |---|---|---|---|
 | 1 | Project scaffold | ✅ Done | Next.js 14.2.24 (App Router) + TS + Tailwind CSS + Framer Motion scaffolded |
-| 2 | Types & data schema | ✅ Done | Types defined in types/index.ts; placeholder data (3 entries each in reading/listening/writing.json) created |
+| 2 | Types & data schema | ✅ Done | Types defined in types/index.ts; Reading uses full 65-item dataset; Listening/Writing have 3 placeholder items |
 | 3 | Scoring logic | ✅ Done | Word-level Levenshtein, matchPercentage (similarity × completeness), scoreBand implemented; all 11 unit tests passed |
 | 4 | Randomization logic | ✅ Done | Fisher-Yates shuffle and getRound (with recentIds exclusion, exhaustion reset, and 30-item cap) implemented; all 6 unit tests passed |
 | 5 | Integrity guards | ✅ Done | copyPasteGuard (handlers/CSS), usePlayCountGuard (play limit enforcement), useFocusLossTracker (blur/visibility tracking) implemented |
@@ -49,7 +49,9 @@ _(Anything a prompt couldn't resolve on its own — e.g. the open Reading-timer 
 ## Post-build checklist (once all 11 prompts are done)
 
 - [x] Manually verify `/api/round` response never includes Listening transcripts or Writing answers (the core integrity guarantee — check this yourself, don't just trust it)
-- [ ] Replace placeholder JSON (3 sample items) with the real ~50-item datasets per module
+- [x] **Swap Reading placeholder → real dataset**: Full dataset with 65 sentences active in `/data/reading.json`
+- [ ] Listening dataset — still placeholder (3 items); needs real audio clips + transcripts from T&P
+- [ ] Writing dataset — still placeholder (3 items); needs real paragraphs + question sets from T&P
 - [ ] Test Web Speech API behavior across the browsers your friends actually use
 - [x] Confirm timer/progress bar blink + red-state animations look right, not janky
 - [ ] Deploy to Vercel, share link, do one full end-to-end run yourself before sending to classmates
