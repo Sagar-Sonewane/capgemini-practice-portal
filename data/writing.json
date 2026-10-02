@@ -2,67 +2,85 @@
   {
     "id": "w001",
     "audio": "/audio/writing/w001.mp3",
-    "questions": [
-      {
-        "q": "What is the primary factor driving modern organizational restructuring according to the lecture?",
-        "type": "mcq",
-        "options": [
-          "Technological disruption and market agility",
-          "Traditional hierarchical compliance",
-          "Real estate consolidation",
-          "Government regulations alone"
-        ],
-        "answer": "Technological disruption and market agility"
-      },
-      {
-        "q": "State the key metric mentioned for evaluating cross-functional performance.",
-        "type": "text",
-        "answer": "delivery speed"
-      }
-    ]
+    "transcript": "In recent years, remote work has moved from being a novelty to becoming a norm for many companies around the world. Technological advances, high-speed internet, video conferencing tools, and cloud-based software have made it possible for employees to collaborate effectively without being physically present in the same office. However, with these benefits come challenges, maintaining team cohesion, ensuring work-life balance, and avoiding feelings of isolation among workers, employers and employees alike are still learning how to adapt policies and habits to make remote work productive and sustainable over time.",
+    "questions": []
   },
   {
     "id": "w002",
     "audio": "/audio/writing/w002.mp3",
-    "questions": [
-      {
-        "q": "Which energy source experienced the largest cost reduction over the last decade?",
-        "type": "mcq",
-        "options": [
-          "Solar photovoltaic power",
-          "Nuclear fission reactors",
-          "Coal-powered thermal stations",
-          "Diesel generator systems"
-        ],
-        "answer": "Solar photovoltaic power"
-      },
-      {
-        "q": "What engineering challenge must still be addressed for widespread grid adoption?",
-        "type": "text",
-        "answer": "grid-scale energy storage"
-      }
-    ]
+    "transcript": "In 2015, Anna Smith completed her master's degree in mathematics from the University of Sydney. After her studies, she started working as a high school teacher in Melbourne. She taught mathematics and helped students prepare for competitive exams. After four years, she was promoted to head of the mathematics department at her school. In 2021, she moved to Brisbane and joined a college as a lecturer in mathematics. She is known for making difficult topics simple and interesting for her students.",
+    "questions": []
   },
   {
     "id": "w003",
     "audio": "/audio/writing/w003.mp3",
-    "questions": [
-      {
-        "q": "Why is microservices architecture favored over monolithic architectures in large systems?",
-        "type": "mcq",
-        "options": [
-          "Independent service deployment and modular scalability",
-          "Simpler debugging across single machines",
-          "Zero requirement for network communication",
-          "Lower initial hardware requirements"
-        ],
-        "answer": "Independent service deployment and modular scalability"
-      },
-      {
-        "q": "Identify the primary operational overhead introduced by distributed microservices.",
-        "type": "text",
-        "answer": "network latency and orchestration complexity"
-      }
-    ]
+    "transcript": "Climate change is one of the most pressing challenges facing the modern world. Rising global temperatures, melting ice caps, and increasing frequency of extreme weather events have raised serious concerns among scientists and policymakers. While governments are working on international agreements to reduce greenhouse gas emissions, individual actions also play a significant role. Simple lifestyle changes, such as conserving energy, reducing waste, and using public transportation, can collectively make a meaningful impact. The urgency of the situation calls for cooperation at every level, global, national, and personal.",
+    "questions": []
+  },
+  {
+    "id": "w004",
+    "audio": "/audio/writing/w004.mp3",
+    "transcript": "With the rapid growth of technology, online education has become a preferred mode of learning for many students. It offers flexibility, affordability, and access to a wide range of courses from anywhere in the world. However, online learning also presents challenges such as reduced personal interaction, distractions at home, and the need for strong self-discipline. Despite these drawbacks, its popularity continues to rise, especially among working professionals and students in remote areas.",
+    "questions": []
+  },
+  {
+    "id": "w005",
+    "audio": "/audio/writing/w005.mp3",
+    "transcript": "Artificial intelligence is transforming the way people work and communicate. Many organizations use AI to automate repetitive tasks and analyze large amounts of information. However, human creativity and decision-making remain important. The future workplace will require professionals to understand technology while continuously developing their problem-solving and communication skills.",
+    "questions": []
+  },
+  {
+    "id": "w006",
+    "audio": "/audio/writing/w006.mp3",
+    "transcript": "Remote work has changed traditional workplace practices. Employees can collaborate with colleagues from different locations using digital tools and communication platforms. While remote work provides flexibility, it also requires discipline and effective time management. Professionals must learn to remain productive while maintaining clear communication with their teams.",
+    "questions": []
+  },
+  {
+    "id": "w007",
+    "audio": "/audio/writing/w007.mp3",
+    "transcript": "Graduation is not the end of learning but the beginning of a professional journey. Technology and industry requirements change rapidly, making continuous learning essential. Professionals who regularly improve their knowledge and skills are better prepared for new opportunities. A positive attitude towards learning can contribute significantly to long-term career growth.",
+    "questions": []
+  },
+  {
+    "id": "w008",
+    "audio": "/audio/writing/w008.mp3",
+    "transcript": "Successful projects often depend on effective teamwork. Every team member brings different skills, ideas, and experiences to the group. Listening to others and respecting different opinions can improve the quality of decisions. When team members communicate openly and support one another, they can solve complex problems more efficiently.",
+    "questions": []
+  },
+  {
+    "id": "w009",
+    "audio": "/audio/writing/w009.mp3",
+    "transcript": "Time is one of the most valuable resources available to every individual. Effective time management helps people prioritize important tasks and reduce unnecessary stress. Creating a daily schedule and setting realistic goals can improve productivity. Small improvements in managing time consistently can eventually lead to significant personal and professional achievements.",
+    "questions": []
+  },
+  {
+    "id": "w010",
+    "audio": "/audio/writing/w010.mp3",
+    "transcript": "Problems are a natural part of both academic and professional life. Instead of becoming discouraged, individuals should analyze the situation and identify possible solutions. A good problem solver remains calm, gathers relevant information, and evaluates different alternatives. This ability becomes especially valuable when working under pressure or facing unexpected challenges.",
+    "questions": []
+  },
+  {
+    "id": "w011",
+    "audio": "/audio/writing/w011.mp3",
+    "transcript": "As organizations increasingly depend on digital systems, cyber security has become an important concern. Sensitive information must be protected from unauthorized access and online threats. Employees also play an important role by following security practices and remaining alert. Awareness, responsible behavior, and proper technology can help organizations reduce potential risks.",
+    "questions": []
+  },
+  {
+    "id": "w012",
+    "audio": "/audio/writing/w012.mp3",
+    "transcript": "Innovation does not always require creating something completely new. Sometimes, improving an existing process or finding a simpler solution can also be innovative. Organizations encourage employees to share ideas and experiment with different approaches. A curious mindset and willingness to learn from failure are important qualities for innovation.",
+    "questions": []
+  },
+  {
+    "id": "w013",
+    "audio": "/audio/writing/w013.mp3",
+    "transcript": "Effective communication involves more than simply speaking confidently. It requires listening carefully, understanding the audience, and expressing ideas clearly. In professional environments, misunderstandings can affect productivity and teamwork. Developing strong communication skills helps individuals build relationships, share information effectively, and create a positive impression during important interactions.",
+    "questions": []
+  },
+  {
+    "id": "w014",
+    "audio": "/audio/writing/w014.mp3",
+    "transcript": "Digital transformation is changing the way organizations deliver products and services. Companies are adopting technologies such as cloud computing, data analytics, and automation to improve efficiency. However, successful transformation also depends on people adapting to change. Employees must be willing to learn new tools and develop relevant skills.",
+    "questions": []
   }
 ]

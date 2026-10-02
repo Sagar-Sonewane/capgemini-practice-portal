@@ -46,11 +46,13 @@ In /types/index.ts, define TypeScript types for:
 
 - ModuleType = "reading" | "listening" | "writing"
 - ReadingItem: { id: string, text: string }
-- ListeningItem: { id: string, audio: string, transcript: string }
+- ListeningItem: { id: string, audio: string, transcript: string, difficulty: "low" | "medium" }
 - WritingQuestion: { q: string, type: "mcq" | "text", options?: string[], answer: string }
-- WritingItem: { id: string, audio: string, questions: WritingQuestion[] }
+- WritingItem: { id: string, audio: string, transcript: string, questions: WritingQuestion[] }
 - RoundItemClientSafe: what gets sent to the client for a round — must NEVER include 
-  ListeningItem.transcript or WritingQuestion.answer
+  ListeningItem.transcript, WritingItem.transcript, or WritingQuestion.answer. 
+  ListeningItem.difficulty IS safe to send (it's metadata, not an answer) — include it 
+  so the client can show a difficulty badge if wanted.
 - ScoreResult: { id: string, matchPercentage?: number, points?: number, correct?: boolean }
 - AttemptResult: { module: ModuleType, totalScore: number, maxScore: number, 
   percentage: number, scoreBand: string, timeTakenSec: number, items: ScoreResult[] }
@@ -399,6 +401,120 @@ Update STATUS.md: mark row 11 ("Landing page & shared UI polish") Done, update
 Go through the "Post-build checklist" section in STATUS.md and check off anything you 
 can verify directly (e.g. confirming /api/round strips sensitive fields); leave the rest 
 unchecked for the user to do manually.
+```
+
+---
+
+## Post-Phase-1 Fixes (reported after using the built app)
+
+These three prompts fix issues found during actual use, after Prompts 1–11 and the dataset organization script were already run. Give them one at a time, same as before.
+
+### Prompt 12 — Listening: let the user choose difficulty before a round
+
+```
+Context: read docs/STATUS.md for current state. Read 
+docs/capgemini-practice-portal-spec.md Section 2.2 — Listening items already carry a 
+difficulty field ("low" | "medium") from the dataset organization step, but nothing in 
+the UI lets the user choose one before starting. Read docs/build-prompts.md Prompt 6 
+for the existing /api/round contract before changing it.
+
+Bug: the Listening module's instructions/start screen jumps straight into a round with 
+no way to pick difficulty.
+
+Fix:
+1. On the Listening instructions page (before "Start"), add a simple selector: 
+   "Low (short sentences)" / "Medium (longer sentences)" / "Both" (default: "Both"). 
+   Keep it visually simple — a few buttons or a radio group, consistent with the rest 
+   of the UI per spec Section 9, not a heavy dropdown/form.
+2. Pass the chosen difficulty as a query param to GET /api/round (e.g. 
+   ?module=listening&difficulty=low). "Both" means no filter — don't add the param, or 
+   pass "all" explicitly, your choice, just handle it consistently server-side.
+3. In the /api/round handler, filter the Listening pool by difficulty BEFORE shuffling, 
+   when a difficulty param is present. If the filtered pool has fewer items than the 
+   requested round size, return whatever's available rather than erroring (e.g. if 
+   "low" only has 8 items and the round size is 10, return all 8 — don't pad with 
+   other-difficulty items).
+4. Reflect the chosen difficulty on the test screen itself (e.g. a small badge: 
+   "Medium difficulty") so the user has confirmation their choice applied.
+
+Update docs/STATUS.md: add a new row (12) to the Build Progress table — "Listening 
+difficulty selector" — mark Done, note what UI pattern was used for the selector.
+```
+
+### Prompt 13 — Listening: fix the play-count bug AND disable pause/seek (anti-cheat)
+
+```
+Context: read docs/STATUS.md for current state. Read docs/build-prompts.md Prompt 5 
+(integrity guards — usePlayCountGuard) for how the play limit was originally built. 
+Read docs/capgemini-practice-portal-spec.md Section 2.2 and Section 7 — playback must 
+now be uninterruptible once started, which is both a bug fix and a deliberate 
+anti-cheat requirement, not just a UX nicety.
+
+Bug reported: the UI shows "2 plays allowed" but after listening to the audio ONE 
+time, both attempts are shown as used — the counter is incrementing more than once per 
+actual listen. Root cause is very likely tied to pause/resume: if the audio exposes 
+native pause/seek controls, a pause-then-resume (or a re-render re-attaching a 'play' 
+event listener without cleanup) can fire the counted event twice for what the user 
+experiences as one listen.
+
+Fix, as one combined change:
+
+1. Remove ALL native browser audio controls — do not render the `controls` attribute 
+   on the <audio> element. The only UI control is a single custom "Play" button.
+2. Once a play starts, it is NOT pausable, seekable, or rewindable — no pause button, 
+   no scrub bar, no keyboard shortcuts (spacebar, arrow keys) should affect it. Playback 
+   runs to natural completion once started. This closes the actual cheat vector (pausing 
+   mid-clip to "save" part of a listen, or scrubbing back to re-hear a section) as well 
+   as the root cause of the counting bug.
+3. Increment the play counter ONLY on the custom Play button's onClick handler — never 
+   on the native 'play'/'pause'/'ended' DOM events, which are less predictable. One 
+   button click = one count, full stop.
+4. Disable the Play button entirely once the play limit (2) is reached — no way to 
+   trigger a 3rd play via button, console, or otherwise re-enabling it client-side 
+   matters less once there's no exposed control to manipulate, but keep the disabled 
+   state enforced in React state, not just a CSS/visual disable.
+5. Show a clear "1 of 2 plays used" (or similar) indicator that updates accurately and 
+   immediately after each real play.
+6. If any Listening-speak-mode or review-screen flow elsewhere in the app also renders 
+   this audio player, apply the same no-controls/no-pause treatment there too — don't 
+   leave an inconsistent second instance with native controls still enabled.
+
+Write a quick manual-test note in your response confirming: no pause/seek is possible 
+mid-playback, one button click plays the full clip and consumes exactly one count, and 
+the button disables after the 2nd play with no way to trigger a 3rd.
+
+Update docs/STATUS.md: add a new row (13) — "Fix: Listening play-count bug + disable 
+pause/seek" — mark Done, note the root cause found and that native controls were 
+removed entirely as the anti-cheat fix.
+```
+
+### Prompt 14 — Auto-submit when recording stops (Reading & Listening speak mode)
+
+```
+Context: read docs/STATUS.md for current state. Read 
+docs/capgemini-practice-portal-spec.md Section 2.1 and 2.2 for the Reading and 
+Listening-speak-mode recording flow.
+
+Current behavior: user clicks Record, speaks, clicks Stop — and then has to click a 
+SEPARATE Submit button to score the attempt. This is one click too many.
+
+Fix: when the user clicks Stop (or the recording otherwise ends, e.g. a max-duration 
+auto-stop if one exists), automatically trigger the same submit/scoring flow that the 
+Submit button currently calls — no separate click required. Specifically:
+1. Find the Stop button's onClick handler (in the Reading module and in the Listening 
+   module's Speak-mode path) and the Submit handler it currently calls separately.
+2. Chain them: Stop's handler should, after finalizing the recording (getting the 
+   audio blob/transcript), immediately call the existing submit/scoring logic — don't 
+   duplicate the scoring code, just call the function that already exists for it.
+3. Remove the now-redundant separate Submit button from these two flows. If a brief 
+   "Submitting..." loading state makes sense while STT/scoring runs, add one so the UI 
+   doesn't feel like it did nothing between Stop and the result appearing.
+4. Do NOT change the Writing module's flow — those are typed/MCQ answers with their 
+   own explicit Submit, which is correct as-is and unrelated to this recording-specific 
+   fix.
+
+Update docs/STATUS.md: add a new row (14) — "Fix: auto-submit on stop recording" — 
+mark Done, confirm both Reading and Listening-speak-mode were updated.
 ```
 
 ---

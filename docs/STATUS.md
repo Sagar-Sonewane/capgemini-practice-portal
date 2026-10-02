@@ -2,8 +2,8 @@
 
 This file is the single source of truth for build progress. Antigravity updates it after completing each prompt in `build-prompts.md` — do not let it drift out of sync with what's actually been built.
 
-**Last updated:** 2026-09-29  
-**Current phase:** Phase 1 code complete — real Reading dataset ready, Listening/Writing datasets still needed (see Post-build checklist)
+**Last updated:** 2026-10-02  
+**Current phase:** Datasets organized — Reading (65 sentences), Listening (22 audio items: 12 low, 10 medium), Writing (14 audio paragraphs organized, questions pending). 3 bugs found in use — fix Prompts 12-14 pending (see `docs/build-prompts.md` "Post-Phase-1 Fixes")
 
 ---
 
@@ -22,7 +22,7 @@ After finishing a prompt:
 | # | Prompt | Status | Notes |
 |---|---|---|---|
 | 1 | Project scaffold | ✅ Done | Next.js 14.2.24 (App Router) + TS + Tailwind CSS + Framer Motion scaffolded |
-| 2 | Types & data schema | ✅ Done | Types defined in types/index.ts; placeholder data (3 entries each in reading/listening/writing.json) created |
+| 2 | Types & data schema | ✅ Done | Types defined in types/index.ts; Reading uses full 65-item dataset; Listening (22 items) & Writing (14 paragraphs) organized |
 | 3 | Scoring logic | ✅ Done | Word-level Levenshtein, matchPercentage (similarity × completeness), scoreBand implemented; all 11 unit tests passed |
 | 4 | Randomization logic | ✅ Done | Fisher-Yates shuffle and getRound (with recentIds exclusion, exhaustion reset, and 30-item cap) implemented; all 6 unit tests passed |
 | 5 | Integrity guards | ✅ Done | copyPasteGuard (handlers/CSS), usePlayCountGuard (play limit enforcement), useFocusLossTracker (blur/visibility tracking) implemented |
@@ -32,6 +32,9 @@ After finishing a prompt:
 | 9 | Writing module UI | ✅ Done | Instructions & test runner built with single-play ParagraphAudioPlayer, QuestionBlock (MCQ + text), and quiz-style evaluation |
 | 10 | Result screen | ✅ Done | ResultSummary, ItemBreakdownList, ReviewMistakes (<70% filter), focus loss integrity note, and retry controls built |
 | 11 | Landing page & shared UI polish | ✅ Done | Landing page with 3 module cards, animations, Timer (mm:ss + blink), and Phase 2-ready depleting ProgressBar built; all 23 tests pass |
+| 12 | Fix: Listening difficulty selector | ⬜ Not started | Bug reported: no way to choose low/medium before a Listening round. Now that real data exists (12 low, 10 medium), this is also needed to make that split usable, not just cosmetic |
+| 13 | Fix: Listening play-count bug + disable pause/seek | ⬜ Not started | Bug reported: shows "2 plays" but both get consumed after a single listen — root cause likely pause/resume + duplicate 'play' listener. Fix also removes native audio controls entirely (no pause/seek once playing) as a deliberate anti-cheat requirement |
+| 14 | Fix: auto-submit on stop recording | ⬜ Not started | Bug reported: Reading & Listening-speak-mode require a separate Submit click after Stop — should auto-submit |
 
 ---
 
@@ -49,9 +52,14 @@ _(Anything a prompt couldn't resolve on its own — e.g. the open Reading-timer 
 ## Post-build checklist (once all 11 prompts are done)
 
 - [x] Manually verify `/api/round` response never includes Listening transcripts or Writing answers (the core integrity guarantee — check this yourself, don't just trust it)
-- [ ] **Swap Reading placeholder → real dataset**: `docs/reading.json` (65 sentences: 50 from T&P + 15 added to match style/difficulty, see `docs/reading-sentences-analysis.md`) exists and is ready — replace `/data/reading.json`'s 3-item placeholder with it, then confirm the app still builds/runs against the full set
-- [ ] Listening dataset — still placeholder (3 items); needs real audio clips + transcripts from T&P
-- [ ] Writing dataset — still placeholder (3 items); needs real paragraphs + question sets from T&P
+- [x] **Swap Reading placeholder → real dataset**: Full dataset with 65 sentences active in `/data/reading.json`
+- [x] **Dataset organization script created & executed**: `scripts/organizeDataset.ts` (npm run organize-dataset) executed on raw dataset.
+  - **Listening**: 22 items organized (`l-low-001`..`012` [<=8s, low], `l-med-001`..`010` [8-15s, medium]) with audio placed in `/public/audio/listening/` and entries in `/data/listening.json`.
+  - **Writing**: 14 items organized (`w001`..`w014` [>15s]) with audio placed in `/public/audio/writing/` and passages + empty questions slots in `/data/writing.json`.
+- [ ] **Writing Questions authoring (Step 2)**: Author 2-3 comprehension questions for each of the 14 paragraphs in `/data/writing.json`.
+- [ ] **Run Prompt 12**: Listening difficulty selector (Low/Medium/Both) — needed now that real low/medium data exists
+- [ ] **Run Prompt 13**: Fix Listening play-count bug + remove native audio controls (no pause/seek) as anti-cheat measure
+- [ ] **Run Prompt 14**: Auto-submit on stop recording for Reading & Listening-speak-mode
 - [ ] Test Web Speech API behavior across the browsers your friends actually use
 - [x] Confirm timer/progress bar blink + red-state animations look right, not janky
 - [ ] Deploy to Vercel, share link, do one full end-to-end run yourself before sending to classmates

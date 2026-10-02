@@ -21,23 +21,32 @@ No accounts, no persistent backend database. Hosted as a single web app (target:
 
 ### 2.2 Listening
 - Audio clip plays **once or twice, no more** (hard-enforced via play counter, not just UI convention).
+- **Once started, playback cannot be paused, seeked, or rewound** — no native browser audio controls are exposed; the only control is a single "Play" button, disabled once the play limit is reached. This closes the loophole of replaying/scrubbing a clip to re-listen past the intended limit.
 - Sentence/transcript is **never shown** to the user.
 - User responds in one of two modes:
   - **Speak**: record → STT → compare to ground-truth transcript.
   - **Type**: type from memory → compare directly to ground-truth transcript.
 - Scored against the same match-percentage formula as Reading.
+- **Difficulty tiers, derived from audio duration**:
+  - **Low**: clips ≤ ~5–8 seconds — short, single sentences.
+  - **Medium**: clips ~9–15 seconds — longer sentences, more content to retain.
+- Difficulty is attached to each item (`difficulty: "low" | "medium"`) so rounds can optionally be filtered or balanced by tier later; v1 just tags and stores it, selection logic can use it or ignore it.
 
 ### 2.3 Writing
 - A paragraph is played as audio (once).
+- **Source**: any clip longer than ~15 seconds is treated as a Writing paragraph rather than a Listening sentence — same raw dataset, split by length.
 - User is shown comprehension questions tied to that paragraph (MCQ and/or short text answers).
 - MCQ = exact match. Text answers = keyword/simple similarity match (no AI call needed for v1).
 - Scored as correct/incorrect per question (quiz-style, not %-match like the other two modules).
+- **Questions are authored once, at build/data-prep time**, not generated at runtime — see Section 3 for the question-authoring step, since duration-based classification only produces the paragraph + transcript, not its questions.
 
 ---
 
 ## 3. Content Source
 
 ~50 sentences per module (Reading pool, Listening pool), provided by T&P cell. Writing module content = paragraphs + associated question sets, also T&P-provided.
+
+**Listening + Writing dataset pipeline**: a single raw folder of audio+transcript pairs (matching filenames) is split by **audio duration** into Listening (short/medium) and Writing (long, >~15s) — see `docs/dataset-organization-prompt.md` for the exact script used to classify, rename, and fold this into `listening.json` / `writing.json`. Writing's comprehension questions are **not** derivable from duration or transcript alone — they're authored once per paragraph (manually or LLM-assisted-then-reviewed) as a separate step, since generating a good question requires understanding the paragraph's content, not just its length.
 
 Reading sample sentences are long/complex (15–40 words, embedded clauses) — scoring must tolerate natural speech variation, not require exact match.
 
@@ -112,7 +121,7 @@ This requires no database — just server-side logic (API routes / serverless fu
 ## 7. Anti-cheating / Integrity Measures (all client-side, no extra infra)
 
 - **Copy-paste / selection block** on Reading sentences (`onCopy`, `onContextMenu`, `user-select: none`).
-- **Play-count enforcement** on Listening audio — hard-capped via a counter on the `play` event listener, not just hiding the replay button.
+- **Play-count enforcement** on Listening audio — hard-capped via a counter tied to the Play button's click (not the native `play` DOM event, which can fire more than once per intended listen). No native browser audio controls are rendered at all (no `controls` attribute, no scrub bar, no pause) — once a play starts it runs to completion uninterrupted; pausing/seeking to "save" part of a listen for later is not possible.
 - **Tab-switch / focus-loss detection** — flag (not block) when the window loses focus mid-test, shown as an integrity note on the result screen.
 - **Answer-key never exposed client-side** — see Section 6.
 

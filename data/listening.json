@@ -1,17 +1,134 @@
 [
   {
-    "id": "l001",
-    "audio": "/audio/listening/l001.mp3",
-    "transcript": "Effective collaboration across multidisciplinary project teams often determines the eventual success of complex organizational transformations."
+    "id": "l-low-001",
+    "audio": "/audio/listening/l-low-001.mp3",
+    "transcript": "Although it was raining heavily, the football match continued without delay.",
+    "difficulty": "low"
   },
   {
-    "id": "l002",
-    "audio": "/audio/listening/l002.mp3",
-    "transcript": "The sudden fluctuation in international commodity prices prompted central banks to reassess their monetary policy guidelines."
+    "id": "l-low-002",
+    "audio": "/audio/listening/l-low-002.mp3",
+    "transcript": "When the results were announced, most of the students celebrated, while a few planned to reappear for improvement.",
+    "difficulty": "low"
   },
   {
-    "id": "l003",
-    "audio": "/audio/listening/l003.mp3",
-    "transcript": "Continuous professional development allows technology professionals to adapt quickly to emerging industrial standards and digital workflows."
+    "id": "l-low-003",
+    "audio": "/audio/listening/l-low-003.mp3",
+    "transcript": "Despite facing technical issues during the presentation, the team delivered their project confidently.",
+    "difficulty": "low"
+  },
+  {
+    "id": "l-low-004",
+    "audio": "/audio/listening/l-low-004.mp3",
+    "transcript": "The railway station was unusually crowded because several trains had been delayed by heavy rainfall.",
+    "difficulty": "low"
+  },
+  {
+    "id": "l-low-005",
+    "audio": "/audio/listening/l-low-005.mp3",
+    "transcript": "The College Canteen introduced a new menu this week, offering both healthy and fast food options for students.",
+    "difficulty": "low"
+  },
+  {
+    "id": "l-low-006",
+    "audio": "/audio/listening/l-low-006.mp3",
+    "transcript": "The students were excited about the industrial visit, but the trip was postponed due to unexpected weather conditions.",
+    "difficulty": "low"
+  },
+  {
+    "id": "l-low-007",
+    "audio": "/audio/listening/l-low-007.mp3",
+    "transcript": "Although the seminar started late, the speaker managed to cover all the important topics within the allotted time.",
+    "difficulty": "low"
+  },
+  {
+    "id": "l-low-008",
+    "audio": "/audio/listening/l-low-008.mp3",
+    "transcript": "The museum was closed for renovation, so the tourists decided to visit the park instead.",
+    "difficulty": "low"
+  },
+  {
+    "id": "l-low-009",
+    "audio": "/audio/listening/l-low-009.mp3",
+    "transcript": "Many people prefer online shopping, but some still enjoy visiting traditional markets.",
+    "difficulty": "low"
+  },
+  {
+    "id": "l-low-010",
+    "audio": "/audio/listening/l-low-010.mp3",
+    "transcript": "The teacher reminded the students to submit their assignments before Friday evening.",
+    "difficulty": "low"
+  },
+  {
+    "id": "l-med-001",
+    "audio": "/audio/listening/l-med-001.mp3",
+    "transcript": "Technology has changed the way people communicate, learn, and work. Professionals must continuously improve their skills to remain relevant in a rapidly changing environment.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "l-med-002",
+    "audio": "/audio/listening/l-med-002.mp3",
+    "transcript": "Teamwork helps individuals combine their strengths and ideas to achieve common goals. Effective communication and mutual respect are essential for successful collaboration.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "l-med-003",
+    "audio": "/audio/listening/l-med-003.mp3",
+    "transcript": "Learning should continue even after graduation. Developing new skills and gaining knowledge can help individuals adapt to changing industry requirements and future opportunities.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "l-med-004",
+    "audio": "/audio/listening/l-med-004.mp3",
+    "transcript": "Clear communication helps people express their ideas effectively. Listening carefully is equally important because successful communication requires understanding as well as speaking.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "l-med-005",
+    "audio": "/audio/listening/l-med-005.mp3",
+    "transcript": "Problem solving requires patience, logical thinking, and creativity. Instead of worrying about challenges, individuals should analyze situations and identify practical solutions.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "l-med-006",
+    "audio": "/audio/listening/l-med-006.mp3",
+    "transcript": "Effective time management helps individuals complete important tasks without unnecessary stress. Planning daily activities and setting priorities can significantly improve productivity and performance.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "l-med-007",
+    "audio": "/audio/listening/l-med-007.mp3",
+    "transcript": "Adaptability allows professionals to respond positively to change. Learning new technologies and accepting unfamiliar responsibilities can create valuable opportunities for personal and professional growth.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "l-med-008",
+    "audio": "/audio/listening/l-med-008.mp3",
+    "transcript": "Innovation often begins with curiosity and observation. Finding better ways to solve existing problems can improve processes, products, and services in meaningful ways.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "l-med-009",
+    "audio": "/audio/listening/l-med-009.mp3",
+    "transcript": "Leadership involves taking responsibility and helping others achieve common objectives. A good leader listens carefully, communicates clearly, and remains competent during difficult situations.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "l-med-010",
+    "audio": "/audio/listening/l-med-010.mp3",
+    "transcript": "Confidence develops through preparation and experience. Individuals should believe in their abilities while remaining open to feedback and willing to improve continuously.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "l-low-011",
+    "audio": "/audio/listening/l-low-011.mp3",
+    "transcript": "The committee's decision, though cloaked in bureaucratic jargon, was essentially a reluctant concession to mounting public discontent.",
+    "difficulty": "low"
+  },
+  {
+    "id": "l-low-012",
+    "audio": "/audio/listening/l-low-012.mp3",
+    "transcript": "The diplomats carefully calibrated silence conveyed more resolve than any vehement declaration could have achieved.",
+    "difficulty": "low"
   }
 ]

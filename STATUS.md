@@ -2,8 +2,8 @@
 
 This file is the single source of truth for build progress. Antigravity updates it after completing each prompt in `build-prompts.md` — do not let it drift out of sync with what's actually been built.
 
-**Last updated:** 2026-09-29  
-**Current phase:** Phase 1 code complete — real Reading dataset ready (65 sentences), Listening/Writing datasets still needed (see Post-build checklist)
+**Last updated:** 2026-10-02  
+**Current phase:** Datasets organized — Reading (65 sentences), Listening (22 audio items: 12 low, 10 medium), Writing (14 audio paragraphs organized; comprehension questions to be added in Step 2)
 
 ---
 
@@ -22,7 +22,7 @@ After finishing a prompt:
 | # | Prompt | Status | Notes |
 |---|---|---|---|
 | 1 | Project scaffold | ✅ Done | Next.js 14.2.24 (App Router) + TS + Tailwind CSS + Framer Motion scaffolded |
-| 2 | Types & data schema | ✅ Done | Types defined in types/index.ts; Reading uses full 65-item dataset; Listening/Writing have 3 placeholder items |
+| 2 | Types & data schema | ✅ Done | Types defined in types/index.ts; Reading uses full 65-item dataset; Listening (22 items) & Writing (14 paragraphs) organized |
 | 3 | Scoring logic | ✅ Done | Word-level Levenshtein, matchPercentage (similarity × completeness), scoreBand implemented; all 11 unit tests passed |
 | 4 | Randomization logic | ✅ Done | Fisher-Yates shuffle and getRound (with recentIds exclusion, exhaustion reset, and 30-item cap) implemented; all 6 unit tests passed |
 | 5 | Integrity guards | ✅ Done | copyPasteGuard (handlers/CSS), usePlayCountGuard (play limit enforcement), useFocusLossTracker (blur/visibility tracking) implemented |
@@ -50,8 +50,10 @@ _(Anything a prompt couldn't resolve on its own — e.g. the open Reading-timer 
 
 - [x] Manually verify `/api/round` response never includes Listening transcripts or Writing answers (the core integrity guarantee — check this yourself, don't just trust it)
 - [x] **Swap Reading placeholder → real dataset**: Full dataset with 65 sentences active in `/data/reading.json`
-- [ ] Listening dataset — still placeholder (3 items); needs real audio clips + transcripts from T&P
-- [ ] Writing dataset — still placeholder (3 items); needs real paragraphs + question sets from T&P
+- [x] **Dataset organization script created & executed**: `scripts/organizeDataset.ts` (npm run organize-dataset) executed on raw dataset.
+  - **Listening**: 22 items organized (`l-low-001`..`012` [<=8s, low], `l-med-001`..`010` [8-15s, medium]) with audio placed in `/public/audio/listening/` and entries in `/data/listening.json`.
+  - **Writing**: 14 items organized (`w001`..`w014` [>15s]) with audio placed in `/public/audio/writing/` and passages + empty questions slots in `/data/writing.json`.
+- [ ] **Writing Questions authoring (Step 2)**: Author 2-3 comprehension questions for each of the 14 paragraphs in `/data/writing.json`.
 - [ ] Test Web Speech API behavior across the browsers your friends actually use
 - [x] Confirm timer/progress bar blink + red-state animations look right, not janky
 - [ ] Deploy to Vercel, share link, do one full end-to-end run yourself before sending to classmates
