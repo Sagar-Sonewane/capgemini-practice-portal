@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
     const moduleParam = searchParams.get("module") as ModuleType | null;
     const countParam = parseInt(searchParams.get("count") || "10", 10);
     const recentIdsParam = searchParams.get("recentIds") || "";
+    const difficultyParam = searchParams.get("difficulty")?.toLowerCase().trim() || "";
 
     if (!moduleParam || !["reading", "listening", "writing"].includes(moduleParam)) {
       return NextResponse.json(
@@ -37,13 +38,28 @@ export async function GET(request: NextRequest) {
       ? recentIdsParam.split(",").map((id) => id.trim()).filter(Boolean)
       : [];
 
-    const rawData = await loadModuleData(moduleParam);
+    let rawData = await loadModuleData(moduleParam);
 
     if (!Array.isArray(rawData) || rawData.length === 0) {
       return NextResponse.json(
         { error: `No dataset items found for module '${moduleParam}'.` },
         { status: 404 }
       );
+    }
+
+    // Filter by difficulty if provided (Listening module)
+    if (
+      moduleParam === "listening" &&
+      difficultyParam &&
+      difficultyParam !== "all" &&
+      difficultyParam !== "both"
+    ) {
+      const filtered = (rawData as ListeningItem[]).filter(
+        (item) => item.difficulty === difficultyParam
+      );
+      if (filtered.length > 0) {
+        rawData = filtered;
+      }
     }
 
     // Select randomized round with recentIds exclusion
@@ -63,6 +79,7 @@ export async function GET(request: NextRequest) {
       clientSafeItems = (selected as ListeningItem[]).map((item) => ({
         id: item.id,
         audio: item.audio,
+        difficulty: item.difficulty,
       } as ListeningItemClientSafe));
     } else if (moduleParam === "writing") {
       // Writing: NEVER send question answer keys to client

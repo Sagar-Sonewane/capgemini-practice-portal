@@ -8,9 +8,14 @@ import Button from "@/components/ui/Button";
 export default function ListeningInstructionsPage() {
   const router = useRouter();
   const [enableTimer, setEnableTimer] = useState<boolean>(false);
+  const [difficulty, setDifficulty] = useState<"both" | "low" | "medium">("both");
 
   const handleStart = () => {
-    router.push(`/listening/test${enableTimer ? "?timer=true" : ""}`);
+    const params = new URLSearchParams();
+    if (enableTimer) params.set("timer", "true");
+    if (difficulty !== "both") params.set("difficulty", difficulty);
+    const queryString = params.toString() ? `?${params.toString()}` : "";
+    router.push(`/listening/test${queryString}`);
   };
 
   return (
@@ -76,6 +81,35 @@ export default function ListeningInstructionsPage() {
           </ul>
 
           <div className="pt-4 border-t border-slate-100 space-y-3">
+            {/* Difficulty Selector */}
+            <div className="p-3.5 bg-slate-50 rounded-xl space-y-2.5">
+              <div>
+                <span className="text-sm font-medium text-slate-800 block">Difficulty Level</span>
+                <span className="text-xs text-slate-500">Choose sentence length and complexity</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 pt-0.5">
+                {[
+                  { id: "both", title: "Both", desc: "Mixed (Low & Med)" },
+                  { id: "low", title: "Low", desc: "Short (≤ 8 sec)" },
+                  { id: "medium", title: "Medium", desc: "Longer (8–15 sec)" },
+                ].map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setDifficulty(opt.id as "both" | "low" | "medium")}
+                    className={`py-2 px-3 rounded-lg text-left transition-all border ${
+                      difficulty === opt.id
+                        ? "bg-white border-blue-500 text-blue-700 shadow-xs ring-1 ring-blue-500"
+                        : "bg-slate-100/70 border-transparent text-slate-600 hover:bg-slate-200/60 hover:text-slate-900"
+                    }`}
+                  >
+                    <span className="block text-xs font-semibold">{opt.title}</span>
+                    <span className="block text-[11px] text-slate-500 mt-0.5">{opt.desc}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
               <div>
                 <span className="text-sm font-medium text-slate-800 block">Optional Countdown Timer</span>

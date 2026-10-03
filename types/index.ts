@@ -9,6 +9,7 @@ export interface ListeningItem {
   id: string;
   audio: string;
   transcript: string;
+  difficulty?: "low" | "medium";
 }
 
 export interface WritingQuestion {
@@ -36,6 +37,7 @@ export interface WritingItemClientSafe {
 export interface ListeningItemClientSafe {
   id: string;
   audio: string;
+  difficulty?: "low" | "medium";
 }
 
 // Discriminant union or item type for client-safe payload

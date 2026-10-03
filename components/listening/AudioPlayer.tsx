@@ -22,8 +22,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     canPlay,
     playsRemaining,
     isPlayLimitReached,
+    isPlaying,
     registerPlay,
-    handlePlayEvent,
+    handleAudioEnded,
     resetPlayCount,
   } = usePlayCountGuard(maxPlays);
 
@@ -43,24 +44,29 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   }, [isPlayLimitReached, onPlayLimitReached]);
 
   const handlePlayClick = () => {
-    if (canPlay && audioRef.current) {
+    // Only allow starting playback if not currently playing and within limit
+    if (canPlay && !isPlaying && audioRef.current) {
       const allowed = registerPlay(audioRef.current);
       if (allowed) {
         audioRef.current.currentTime = 0;
         audioRef.current.play().catch(() => {
-          // Browser audio policy handling
+          // Handle auto-play block or playback error gracefully
+          handleAudioEnded();
         });
       }
     }
   };
 
   return (
-    <div className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm space-y-4">
+    <div className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm space-y-4 select-none">
+      {/* Hidden audio element without native controls or keyboard intercept */}
       <audio
         ref={audioRef}
         src={src}
         preload="auto"
-        onPlay={handlePlayEvent}
+        tabIndex={-1}
+        onEnded={handleAudioEnded}
+        onError={handleAudioEnded}
         className="hidden"
       />
 
@@ -72,6 +78,8 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <p className="text-sm font-medium text-slate-800 mt-0.5">
             {isPlayLimitReached
               ? "Playback limit reached for this sentence"
+              : isPlaying
+              ? "Audio playing (uninterruptible)..."
               : `You can listen to this clip ${playsRemaining} more time${playsRemaining === 1 ? "" : "s"}`}
           </p>
         </div>
@@ -80,31 +88,56 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <Button
             variant={isPlayLimitReached ? "secondary" : "primary"}
             onClick={handlePlayClick}
-            disabled={isPlayLimitReached}
+            disabled={!canPlay || isPlaying || isPlayLimitReached}
             className="flex items-center gap-2 px-5 py-2.5 shadow-sm"
           >
-            <svg
-              className="w-5 h-5 text-current"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M8 5v14l11-7z" />
-            </svg>
-            <span>
-              {playCount === 0
-                ? "Play Sentence Audio"
-                : `Replay (${playsRemaining} left)`}
-            </span>
+            {isPlaying ? (
+              <>
+                <svg
+                  className="w-5 h-5 text-current animate-pulse"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"
+                  />
+                </svg>
+                <span>Playing Audio...</span>
+              </>
+            ) : (
+              <>
+                <svg
+                  className="w-5 h-5 text-current"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                <span>
+                  {playCount === 0
+                    ? "Play Sentence Audio"
+                    : isPlayLimitReached
+                    ? "Playback Limit Reached"
+                    : `Replay Audio (${playsRemaining} left)`}
+                </span>
+              </>
+            )}
           </Button>
 
           <span
-            className={`text-xs px-2.5 py-1 rounded-full font-semibold border ${
+            className={`text-xs px-2.5 py-1 rounded-full font-semibold border transition-colors ${
               isPlayLimitReached
                 ? "bg-rose-50 text-rose-700 border-rose-200"
+                : isPlaying
+                ? "bg-amber-50 text-amber-700 border-amber-200"
                 : "bg-blue-50 text-blue-700 border-blue-200"
             }`}
           >
-            {playCount}/{maxPlays} Plays
+            {playCount} of {maxPlays} plays used
           </span>
         </div>
       </div>

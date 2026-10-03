@@ -43,6 +43,26 @@ test("GET /api/round - Listening module STRICT INTEGRITY: transcript is NEVER in
   }
 });
 
+test("GET /api/round - Listening module difficulty filtering (low & medium)", async () => {
+  const reqLow = new NextRequest("http://localhost:3000/api/round?module=listening&difficulty=low&count=5");
+  const resLow = await roundHandler(reqLow);
+  assert.equal(resLow.status, 200);
+  const dataLow = await resLow.json();
+  assert.ok(dataLow.items.length > 0);
+  for (const item of dataLow.items) {
+    assert.equal(item.difficulty, "low");
+  }
+
+  const reqMed = new NextRequest("http://localhost:3000/api/round?module=listening&difficulty=medium&count=5");
+  const resMed = await roundHandler(reqMed);
+  assert.equal(resMed.status, 200);
+  const dataMed = await resMed.json();
+  assert.ok(dataMed.items.length > 0);
+  for (const item of dataMed.items) {
+    assert.equal(item.difficulty, "medium");
+  }
+});
+
 test("GET /api/round - Writing module STRICT INTEGRITY: answer keys are NEVER included", async () => {
   const req = new NextRequest("http://localhost:3000/api/round?module=writing&count=3");
   const res = await roundHandler(req);

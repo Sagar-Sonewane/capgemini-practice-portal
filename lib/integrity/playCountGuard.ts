@@ -5,37 +5,46 @@ export interface UsePlayCountGuardReturn {
   canPlay: boolean;
   playsRemaining: number;
   isPlayLimitReached: boolean;
+  isPlaying: boolean;
   registerPlay: (audioElement?: HTMLAudioElement | null) => boolean;
-  handlePlayEvent: (e: React.SyntheticEvent<HTMLAudioElement>) => void;
+  handleAudioEnded: () => void;
   resetPlayCount: () => void;
 }
 
 /**
  * Hook to enforce hard play-count limits on audio playback (e.g. max 1 or 2 plays).
- * Pauses and blocks the HTML5 audio element if play limits are exceeded.
+ * Ensures counting only occurs on explicit button action (onClick) and playback
+ * runs uninterruptibly without DOM event double-counting.
  */
 export function usePlayCountGuard(maxPlays: number = 2): UsePlayCountGuardReturn {
   const [playCount, setPlayCount] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const playCountRef = useRef<number>(0);
+  const isPlayingRef = useRef<boolean>(false);
+  
   playCountRef.current = playCount;
+  isPlayingRef.current = isPlaying;
 
-  const canPlay = playCount < maxPlays;
+  const canPlay = playCount < maxPlays && !isPlaying;
   const playsRemaining = Math.max(0, maxPlays - playCount);
   const isPlayLimitReached = playCount >= maxPlays;
 
   const registerPlay = useCallback(
     (audioElement?: HTMLAudioElement | null): boolean => {
-      if (playCountRef.current < maxPlays) {
+      // Only allow play if limit is not reached and not already actively playing
+      if (playCountRef.current < maxPlays && !isPlayingRef.current) {
         setPlayCount((prev) => {
           const next = prev + 1;
           playCountRef.current = next;
           return next;
         });
+        setIsPlaying(true);
+        isPlayingRef.current = true;
         return true;
       }
 
       // Hard block: pause audio if limit reached
-      if (audioElement) {
+      if (audioElement && playCountRef.current >= maxPlays) {
         audioElement.pause();
         audioElement.currentTime = 0;
       }
@@ -44,26 +53,16 @@ export function usePlayCountGuard(maxPlays: number = 2): UsePlayCountGuardReturn
     [maxPlays]
   );
 
-  const handlePlayEvent = useCallback(
-    (e: React.SyntheticEvent<HTMLAudioElement>) => {
-      const audio = e.currentTarget;
-      if (playCountRef.current >= maxPlays) {
-        audio.pause();
-        audio.currentTime = 0;
-        return;
-      }
-      setPlayCount((prev) => {
-        const next = prev + 1;
-        playCountRef.current = next;
-        return next;
-      });
-    },
-    [maxPlays]
-  );
+  const handleAudioEnded = useCallback(() => {
+    setIsPlaying(false);
+    isPlayingRef.current = false;
+  }, []);
 
   const resetPlayCount = useCallback(() => {
     setPlayCount(0);
+    setIsPlaying(false);
     playCountRef.current = 0;
+    isPlayingRef.current = false;
   }, []);
 
   return {
@@ -71,8 +70,9 @@ export function usePlayCountGuard(maxPlays: number = 2): UsePlayCountGuardReturn
     canPlay,
     playsRemaining,
     isPlayLimitReached,
+    isPlaying,
     registerPlay,
-    handlePlayEvent,
+    handleAudioEnded,
     resetPlayCount,
   };
 }

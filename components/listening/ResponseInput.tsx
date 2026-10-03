@@ -24,6 +24,7 @@ export const ResponseInput: React.FC<ResponseInputProps> = ({
     isSupported,
     start: startSTT,
     stop: stopSTT,
+    getLatestTranscript,
     resetTranscript,
     error: sttError,
   } = useSpeechRecognition();
@@ -40,12 +41,12 @@ export const ResponseInput: React.FC<ResponseInputProps> = ({
   };
 
   const handleStopSpeaking = () => {
-    stopSTT();
-  };
-
-  const handleSubmitSpeak = () => {
-    if (isListening) stopSTT();
-    onSubmit(transcript, "speak");
+    const textOnStop = stopSTT();
+    // Allow brief buffer for STT engine to finalize final word boundary
+    setTimeout(() => {
+      const finalText = getLatestTranscript() || textOnStop || transcript;
+      onSubmit(finalText, "speak");
+    }, 300);
   };
 
   const handleSubmitType = () => {
@@ -110,8 +111,13 @@ export const ResponseInput: React.FC<ResponseInputProps> = ({
                 className="flex items-center gap-2 px-6 py-3 shadow-sm"
               >
                 <span className="w-3 h-3 rounded-full bg-white animate-ping inline-block" />
-                <span>Stop Recording</span>
+                <span>Stop & Submit</span>
               </Button>
+            ) : isProcessing ? (
+              <div className="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-50 text-blue-700 text-sm font-medium border border-blue-200">
+                <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                <span>Evaluating & Scoring Voice Response...</span>
+              </div>
             ) : (
               <Button
                 variant="primary"
@@ -127,7 +133,7 @@ export const ResponseInput: React.FC<ResponseInputProps> = ({
                   <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
                   <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
                 </svg>
-                <span>{transcript ? "Re-record Response" : "Click to Speak"}</span>
+                <span>Click to Speak</span>
               </Button>
             )}
 
@@ -136,31 +142,21 @@ export const ResponseInput: React.FC<ResponseInputProps> = ({
             )}
           </div>
 
-          {transcript ? (
-            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
-              <div>
-                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">
-                  Your Spoken Response
-                </span>
-                <p className="text-sm font-mono text-slate-800 mt-1 italic">
-                  "{transcript}"
-                </p>
-              </div>
-
-              <div className="flex justify-end pt-1">
-                <Button
-                  variant="primary"
-                  onClick={handleSubmitSpeak}
-                  disabled={disabled || isProcessing || isListening}
-                  className="px-5 py-2 text-xs"
-                >
-                  {isProcessing ? "Scoring Response..." : "Submit Voice Answer →"}
-                </Button>
-              </div>
+          {/* Live speech preview while speaking */}
+          {isListening && transcript && (
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">
+                Live Speech Detected
+              </span>
+              <p className="text-sm font-mono text-slate-800 italic">
+                "{transcript}"
+              </p>
             </div>
-          ) : (
+          )}
+
+          {!isListening && !isProcessing && (
             <p className="text-xs text-center text-slate-400">
-              Listen to the sentence audio above, then speak your response into the microphone.
+              Listen to the sentence audio, click to speak, and click Stop when done — score will submit automatically.
             </p>
           )}
         </div>

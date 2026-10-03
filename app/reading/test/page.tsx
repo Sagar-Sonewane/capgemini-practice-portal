@@ -42,6 +42,7 @@ function ReadingTestSession() {
     isSupported,
     start: startSTT,
     stop: stopSTT,
+    getLatestTranscript,
     resetTranscript,
     error: sttError,
   } = useSpeechRecognition();
@@ -79,36 +80,6 @@ function ReadingTestSession() {
 
     loadRound();
   }, []);
-
-  // Timer logic (if enabled)
-  useEffect(() => {
-    if (!isTimerEnabled || isLoading || items.length === 0 || currentScore !== null) {
-      return;
-    }
-
-    setSecondsLeft(SENTENCE_TIME_LIMIT);
-
-    timerRef.current = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current!);
-          handleTimeExpired();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [currentIndex, isTimerEnabled, isLoading, items.length, currentScore]);
-
-  const handleTimeExpired = useCallback(() => {
-    if (isListening) {
-      stopSTT();
-    }
-  }, [isListening, stopSTT]);
 
   // Submit and score recorded transcript
   const handleScoreRecording = useCallback(
@@ -160,17 +131,52 @@ function ReadingTestSession() {
     [items, currentIndex]
   );
 
+  const handleTimeExpired = useCallback(() => {
+    if (isListening) {
+      const textOnStop = stopSTT();
+      setTimeout(() => {
+        const finalText = getLatestTranscript() || textOnStop || transcript;
+        handleScoreRecording(finalText);
+      }, 300);
+    }
+  }, [isListening, stopSTT, getLatestTranscript, transcript, handleScoreRecording]);
+
+  // Timer logic (if enabled)
+  useEffect(() => {
+    if (!isTimerEnabled || isLoading || items.length === 0 || currentScore !== null) {
+      return;
+    }
+
+    setSecondsLeft(SENTENCE_TIME_LIMIT);
+
+    timerRef.current = setInterval(() => {
+      setSecondsLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current!);
+          handleTimeExpired();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [currentIndex, isTimerEnabled, isLoading, items.length, currentScore, handleTimeExpired]);
+
   const handleStartRecording = () => {
     resetTranscript();
     startSTT();
   };
 
   const handleStopRecording = () => {
-    stopSTT();
-    // Allow brief buffer for STT result to settle
+    const textOnStop = stopSTT();
+    // Allow brief buffer for STT engine to finalize word boundary
     setTimeout(() => {
-      handleScoreRecording(transcript);
-    }, 400);
+      const finalText = getLatestTranscript() || textOnStop || transcript;
+      handleScoreRecording(finalText);
+    }, 300);
   };
 
   const handleNext = () => {

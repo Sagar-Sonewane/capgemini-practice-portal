@@ -32,6 +32,9 @@ After finishing a prompt:
 | 9 | Writing module UI | ✅ Done | Instructions & test runner built with single-play ParagraphAudioPlayer, QuestionBlock (MCQ + text), and quiz-style evaluation |
 | 10 | Result screen | ✅ Done | ResultSummary, ItemBreakdownList, ReviewMistakes (<70% filter), focus loss integrity note, and retry controls built |
 | 11 | Landing page & shared UI polish | ✅ Done | Landing page with 3 module cards, animations, Timer (mm:ss + blink), and Phase 2-ready depleting ProgressBar built; all 23 tests pass |
+| 12 | Fix: Listening difficulty selector | ✅ Done | Segmented button selector (Low [≤8s] / Medium [8–15s] / Both) on instructions screen; filtered before shuffling in /api/round; active difficulty badge on test screen |
+| 13 | Fix: Listening play-count bug + disable pause/seek | ✅ Done | Root cause was double-incrementing from registerPlay + native onPlay DOM event listener. Removed all native controls, made playback uninterruptible (no pause/seek), only increment on button click, enforce lock in React state |
+| 14 | Fix: auto-submit on stop recording | ✅ Done | Chained Stop recording directly to submission/scoring logic in both Reading and Listening (speak-mode); removed redundant separate submit button and added processing state |
 
 ---
 

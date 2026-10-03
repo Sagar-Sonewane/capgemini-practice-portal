@@ -20,6 +20,7 @@ function ListeningTestSession() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isTimerEnabled = searchParams.get("timer") === "true";
+  const difficultyParam = searchParams.get("difficulty")?.toLowerCase().trim();
 
   const [items, setItems] = useState<ListeningItemClientSafe[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -41,8 +42,11 @@ function ListeningTestSession() {
       try {
         setIsLoading(true);
         const recentIds = getRecentIdsFromStorage("listening");
+        const difficultyQuery = difficultyParam
+          ? `&difficulty=${encodeURIComponent(difficultyParam)}`
+          : "";
         const res = await fetch(
-          `/api/round?module=listening&count=10&recentIds=${recentIds.join(",")}`
+          `/api/round?module=listening&count=10&recentIds=${recentIds.join(",")}${difficultyQuery}`
         );
 
         if (!res.ok) {
@@ -247,6 +251,14 @@ function ListeningTestSession() {
             <span className="text-xs text-slate-300">|</span>
             <span className="text-xs font-bold text-blue-600 tracking-wide uppercase">
               Listening Test
+            </span>
+            <span className="text-xs text-slate-300">|</span>
+            <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full capitalize bg-blue-50 text-blue-700 border border-blue-200">
+              {difficultyParam === "low"
+                ? "Low Difficulty"
+                : difficultyParam === "medium"
+                ? "Medium Difficulty"
+                : "Mixed Difficulty"}
             </span>
           </div>
 

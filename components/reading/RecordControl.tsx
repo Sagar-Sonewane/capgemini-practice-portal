@@ -29,8 +29,13 @@ export const RecordControl: React.FC<RecordControlProps> = ({
             className="flex items-center gap-2 px-6 py-3 shadow-sm"
           >
             <span className="w-3 h-3 rounded-full bg-white animate-ping inline-block" />
-            <span>Stop & Submit Recording</span>
+            <span>Stop & Submit</span>
           </Button>
+        ) : isProcessing ? (
+          <div className="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-50 text-blue-700 text-sm font-medium border border-blue-200 shadow-xs">
+            <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+            <span>Evaluating & Scoring Reading...</span>
+          </div>
         ) : (
           <Button
             variant="primary"
@@ -46,7 +51,7 @@ export const RecordControl: React.FC<RecordControlProps> = ({
               <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
               <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
             </svg>
-            <span>{isProcessing ? "Processing Score..." : "Click to Speak"}</span>
+            <span>Click to Speak</span>
           </Button>
         )}
       </div>
@@ -54,6 +59,8 @@ export const RecordControl: React.FC<RecordControlProps> = ({
       <p className="text-xs text-slate-500">
         {isRecording
           ? "Speaking into mic... Click 'Stop & Submit' when you finish reading."
+          : isProcessing
+          ? "Analyzing sentence accuracy against ground truth..."
           : "Click the mic button to start recording. Read naturally at your own pace."}
       </p>
     </div>

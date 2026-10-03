@@ -7,7 +7,8 @@ export interface UseSpeechRecognitionReturn {
   isListening: boolean;
   isSupported: boolean;
   start: () => void;
-  stop: () => void;
+  stop: () => string;
+  getLatestTranscript: () => string;
   resetTranscript: () => void;
   error: string | null;
 }
@@ -84,7 +85,7 @@ export function useSpeechRecognition(onFinalTranscript?: (text: string) => void)
     }
   }, [isListening]);
 
-  const stop = useCallback(() => {
+  const stop = useCallback((): string => {
     if (recognitionRef.current && isListening) {
       try {
         recognitionRef.current.stop();
@@ -93,7 +94,12 @@ export function useSpeechRecognition(onFinalTranscript?: (text: string) => void)
       }
       setIsListening(false);
     }
+    return finalTranscriptRef.current;
   }, [isListening]);
+
+  const getLatestTranscript = useCallback((): string => {
+    return finalTranscriptRef.current;
+  }, []);
 
   const resetTranscript = useCallback(() => {
     finalTranscriptRef.current = "";
@@ -107,6 +113,7 @@ export function useSpeechRecognition(onFinalTranscript?: (text: string) => void)
     isSupported,
     start,
     stop,
+    getLatestTranscript,
     resetTranscript,
     error,
   };
